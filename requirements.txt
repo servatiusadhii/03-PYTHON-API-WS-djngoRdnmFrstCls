@@ -3,7 +3,7 @@ gunicorn
 pandas
 numpy
 scikit-learn
-pymysql
+mysqlclient
 openpyxl
 reportlab
 dj-database-url
