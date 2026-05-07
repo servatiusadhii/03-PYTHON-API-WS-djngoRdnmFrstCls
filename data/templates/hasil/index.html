@@ -1,0 +1,216 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Hasil
+Prediksi{% endblock %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/hasil/hasil.css' %}" />
+
+<style>
+  .page-wrapper {
+    padding: 25px;
+  }
+
+  .page-title {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+
+  /* CARD */
+
+  .card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+    padding: 20px;
+  }
+
+  /* TABLE */
+
+  .table-wrapper {
+    overflow-x: auto;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead {
+    background: #f7f9fc;
+  }
+
+  th,
+  td {
+    padding: 12px 14px;
+    font-size: 14px;
+    text-align: left;
+  }
+
+  th {
+    font-weight: 600;
+  }
+
+  tbody tr {
+    border-top: 1px solid #eee;
+  }
+
+  tbody tr:hover {
+    background: #fafafa;
+  }
+
+  /* BADGES */
+
+  .badge-rmse {
+    background: #ebf4ff;
+    color: #2f80ed;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  .badge-k {
+    background: #e8fff1;
+    color: #27ae60;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+  }
+
+  /* EMPTY STATE */
+
+  .empty-state {
+    padding: 20px;
+    text-align: center;
+    color: #888;
+  }
+
+  /* PAGINATION */
+
+  .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    margin-top: 30px;
+  }
+
+  .page-btn {
+    padding: 7px 12px;
+    background: #f3f5f7;
+    border-radius: 6px;
+    text-decoration: none;
+    color: #333;
+    font-size: 14px;
+    transition: 0.2s;
+  }
+
+  .page-btn:hover {
+    background: #2f80ed;
+    color: white;
+  }
+
+  .page-active {
+    padding: 7px 12px;
+    border-radius: 6px;
+    background: #2f80ed;
+    color: white;
+    font-weight: 500;
+  }
+</style>
+
+{% endblock %} {% block content %}
+
+<div class="page-wrapper">
+  <div class="page-title">Hasil Prediksi Harga Beras</div>
+
+  <div class="card">
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Tanggal Uji</th>
+            <th>Jenis Beras</th>
+            <th>Stok Target</th>
+            <th>Kuantitas Target</th>
+            <th>Harga Prediksi</th>
+            <th>RMSE</th>
+            <th>K</th>
+            <th>Tanggal Proses</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for d in data %}
+
+          <tr>
+            <td>{{ forloop.counter }}</td>
+
+            <td>{{ d.tanggal }}</td>
+
+            <td>{{ d.jenis_beras }}</td>
+
+            <td>{{ d.stok_target }}</td>
+
+            <td>{{ d.kuantitas_target }}</td>
+
+            <td>
+              <strong style="color: #27ae60">
+                Rp {{ d.harga_prediksi|floatformat:0 }}
+              </strong>
+            </td>
+
+            <td>
+              <span class="badge-rmse"> {{ d.nilai_rmse|floatformat:2 }} </span>
+            </td>
+
+            <td>
+              <span class="badge-k"> {{ d.k_digunakan }} </span>
+            </td>
+
+            <td>{{ d.created_at|date:"d-m-Y H:i" }}</td>
+          </tr>
+
+          {% empty %}
+
+          <tr>
+            <td colspan="9">
+              <div class="empty-state">Belum ada hasil prediksi</div>
+            </td>
+          </tr>
+
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- PAGINATION -->
+
+  <!-- PAGINATION -->
+
+<div class="pagination">
+
+{% if data.has_previous %}
+<a href="?page=1" class="page-btn">«</a>
+<a href="?page={{ data.previous_page_number }}" class="page-btn">‹</a>
+{% endif %}
+
+{% for num in data.paginator.page_range %}
+
+    {% if num == data.number %}
+        <span class="page-active">{{ num }}</span>
+    {% else %}
+        <a href="?page={{ num }}" class="page-btn">{{ num }}</a>
+    {% endif %}
+
+{% endfor %}
+
+{% if data.has_next %}
+<a href="?page={{ data.next_page_number }}" class="page-btn">›</a>
+<a href="?page={{ data.paginator.num_pages }}" class="page-btn">»</a>
+{% endif %}
+
+</div>
+
+{% endblock %}

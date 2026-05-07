@@ -1,0 +1,206 @@
+h2 {
+  font-weight: 600;
+  margin-bottom: 30px;
+  color: #0f172a;
+}
+
+h3 {
+  margin-top: 45px;
+  margin-bottom: 20px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+h4 {
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #1e293b;
+}
+
+p {
+  margin: 6px 0;
+  font-size: 14px;
+  color: #475569;
+  line-height: 1.6;
+}
+
+.table-container {
+  background: #ffffff;
+  padding: 35px;
+  border-radius: 20px;
+  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.05);
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+thead {
+  background: linear-gradient(90deg, #1e293b, #334155);
+}
+
+thead th {
+  padding: 18px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #ffffff;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  text-align: center;
+}
+
+tbody td {
+  padding: 18px 12px;
+  font-size: 14px;
+  color: #334155;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: center;
+}
+
+tbody tr:hover {
+  background: #f8fafc;
+}
+
+th:nth-child(1),
+td:nth-child(1) {
+  width: 5%;
+}
+
+th:nth-child(2),
+td:nth-child(2) {
+  width: 20%;
+}
+
+th:nth-child(3),
+td:nth-child(3) {
+  width: 25%;
+}
+
+th:nth-child(4),
+td:nth-child(4) {
+  width: 20%;
+}
+
+th:nth-child(5),
+td:nth-child(5) {
+  width: 10%;
+}
+
+th:nth-child(6),
+td:nth-child(6) {
+  width: 5%;
+}
+
+th:nth-child(7),
+td:nth-child(7) {
+  width: 15%;
+}
+
+tbody td:nth-child(4) {
+  text-align: right;
+  padding-right: 25px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.btn-detail {
+  background: #0f172a;
+  color: #ffffff;
+  padding: 7px 16px;
+  border-radius: 8px;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.btn-detail:hover {
+  background: #1e293b;
+}
+
+.empty-state {
+  padding: 30px;
+  text-align: center;
+  background: #f8fafc;
+  border-radius: 12px;
+  color: #64748b;
+}
+
+.perhitungan-box {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 16px;
+  margin-bottom: 25px;
+  border: 1px solid #e2e8f0;
+}
+
+.perhitungan-box .perhitungan-box {
+  background: #f8fafc;
+}
+
+hr {
+  border: none;
+  height: 1px;
+  background: #e2e8f0;
+  margin: 25px 0;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+}
+
+.modal-content {
+  background: #ffffff;
+  margin: 6% auto;
+  padding: 35px;
+  width: 480px;
+  border-radius: 18px;
+  animation: fadeIn 0.3s ease;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.3);
+}
+
+.close {
+  float: right;
+  font-size: 22px;
+  cursor: pointer;
+  color: #64748b;
+}
+
+.close:hover {
+  color: #ef4444;
+}
+
+@keyframes fadeIn {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@media (max-width: 768px) {
+  .table-container {
+    padding: 20px;
+  }
+
+  th,
+  td {
+    font-size: 12px;
+    padding: 10px;
+  }
+
+  .modal-content {
+    width: 90%;
+  }
+}

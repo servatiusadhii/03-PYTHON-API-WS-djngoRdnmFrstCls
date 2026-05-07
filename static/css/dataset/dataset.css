@@ -1,0 +1,154 @@
+/* =========================
+   DATASET / KELOLA DATA
+   ========================= */
+
+.page-wrapper {
+  padding: 40px 60px;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #1e293b;
+}
+
+/* Card */
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05);
+}
+
+/* Header area (search + buttons) */
+.table-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+/* Search */
+.search-box input {
+  width: 260px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid #e2e8f0;
+  font-size: 14px;
+  background: #f8fafc;
+}
+
+.search-box input:focus {
+  outline: none;
+  border-color: #10b981;
+  background: #ffffff;
+}
+
+/* Action buttons */
+.action-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-action {
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-action:hover {
+  background: #e2e8f0;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f1f5f9;
+}
+
+th,
+td {
+  padding: 12px;
+  font-size: 14px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+th {
+  font-weight: 600;
+  color: #475569;
+}
+
+tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* Detail button */
+.btn-detail {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  background: #e0f2fe;
+  color: #0369a1;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+/* Empty row (replace inline style) */
+.empty-row {
+  text-align: center;
+  padding: 20px;
+  color: #64748b;
+}
+
+/* Pagination */
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  color: #64748b;
+}
+
+.pagination-controls button {
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  cursor: pointer;
+  margin-left: 5px;
+}
+
+.pagination-controls .active {
+  background: #1e293b;
+  color: #ffffff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .page-wrapper {
+    padding: 20px;
+  }
+
+  .table-top {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .search-box input {
+    width: 100%;
+  }
+}

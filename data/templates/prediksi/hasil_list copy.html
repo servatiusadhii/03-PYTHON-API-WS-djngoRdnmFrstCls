@@ -1,0 +1,236 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/hasil/hasil_list.css' %}" />
+{% endblock %} {% block content %}
+
+<h2>Hasil Prediksi</h2>
+
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Tanggal Uji</th>
+        <th>Jenis</th>
+        <th>Harga Prediksi</th>
+        <th>RMSE</th>
+        <th>K</th>
+        <th>Aksi</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% if data %}
+
+      <tr>
+        <td>1</td>
+
+        <td>{{ data.tanggal }}</td>
+
+        <td>{{ data.jenis_beras }}</td>
+
+        <td><strong>Rp {{ data.harga_prediksi|floatformat:0 }}</strong></td>
+
+        <td>{{ data.nilai_rmse|floatformat:2 }}</td>
+
+        <td>{{ data.k_digunakan }}</td>
+
+        <td>
+          <button
+            class="btn-detail"
+            onclick="openModal(
+'{{ data.tanggal }}',
+'{{ data.jenis_beras }}',
+'{{ data.stok_target }}',
+'{{ data.kuantitas_target }}',
+'{{ data.harga_prediksi|floatformat:0 }}',
+'{{ data.nilai_rmse|floatformat:2 }}',
+'{{ data.k_digunakan }}',
+'{{ data.tanggal }}'
+)"
+          >
+            Detail
+          </button>
+        </td>
+      </tr>
+
+      {% else %}
+
+      <tr>
+        <td colspan="7">
+          <div class="empty-state">Belum ada hasil prediksi</div>
+        </td>
+      </tr>
+
+      {% endif %}
+    </tbody>
+  </table>
+
+  <h3>Perhitungan Manual KNN Lengkap</h3>
+
+  <div class="perhitungan-box">
+    <h4>1. Data Target</h4>
+
+    <p>Stok Target = <strong>{{ detail.target.stok }}</strong></p>
+
+    <p>Kuantitas Target = <strong>{{ detail.target.kuantitas }}</strong></p>
+
+    <hr />
+
+    <h4>2. Menghitung Jarak Euclidean</h4>
+
+    {% for d in detail.perhitungan %}
+
+    <div class="perhitungan-box">
+      <p><strong>Data Latih</strong></p>
+
+      <p>Stok = {{ d.stok }}</p>
+
+      <p>Kuantitas = {{ d.kuantitas }}</p>
+
+      <p>Harga = {{ d.harga }}</p>
+
+      <hr />
+
+      <p><strong>Langkah 1: Selisih</strong></p>
+
+      <p>{{ d.stok }} - {{ detail.target.stok }} = {{ d.selisih_stok }}</p>
+
+      <p>
+        {{ d.kuantitas }} - {{ detail.target.kuantitas }} = {{
+        d.selisih_kuantitas }}
+      </p>
+
+      <hr />
+
+      <p><strong>Langkah 2: Kuadrat</strong></p>
+
+      <p>({{ d.selisih_stok }})² = {{ d.kuadrat_stok }}</p>
+
+      <p>({{ d.selisih_kuantitas }})² = {{ d.kuadrat_kuantitas }}</p>
+
+      <hr />
+
+      <p><strong>Langkah 3: Penjumlahan</strong></p>
+
+      <p>
+        {{ d.kuadrat_stok }} + {{ d.kuadrat_kuantitas }} = {{ d.jumlah_kuadrat
+        }}
+      </p>
+
+      <hr />
+
+      <p><strong>Langkah 4: Euclidean Distance</strong></p>
+
+      <p>
+        d = √{{ d.jumlah_kuadrat }} =
+        <strong>{{ d.jarak|floatformat:2 }}</strong>
+      </p>
+    </div>
+
+    {% endfor %}
+
+    <hr />
+
+    <h4>3. Menentukan K Tetangga Terdekat</h4>
+
+    <p>K = <strong>{{ data.k_digunakan }}</strong></p>
+
+    {% for t in detail.tetangga %}
+
+    <p>Harga = {{ t.harga }} | Jarak = {{ t.jarak|floatformat:2 }}</p>
+
+    {% endfor %}
+
+    <hr />
+
+    <h4>4. Menghitung Harga Prediksi</h4>
+
+    <p>Total Harga Tetangga = {{ detail.total_harga }}</p>
+
+    <p>Harga Prediksi = Total Harga / K</p>
+
+    <p>{{ detail.total_harga }} / {{ data.k_digunakan }}</p>
+
+    <p><strong>Rp {{ data.harga_prediksi|floatformat:0 }}</strong></p>
+
+    <hr />
+
+    <h4>5. Evaluasi RMSE</h4>
+
+    {% for r in detail.rmse_detail %}
+
+    <div class="perhitungan-box">
+      <p><strong>Harga Aktual:</strong> {{ r.harga_asli }}</p>
+
+      <p>
+        Error = {{ r.harga_asli }} - {{ data.harga_prediksi|floatformat:0 }}
+      </p>
+
+      <p>= {{ r.error|floatformat:2 }}</p>
+
+      <p>(Error)² = {{ r.kuadrat_error|floatformat:2 }}</p>
+    </div>
+
+    {% endfor %}
+
+    <p><strong>MSE</strong> = {{ detail.mse|floatformat:2 }}</p>
+
+    <p><strong>RMSE</strong> = √{{ detail.mse|floatformat:2 }}</p>
+
+    <p><strong>{{ data.nilai_rmse|floatformat:2 }}</strong></p>
+  </div>
+</div>
+
+<div id="detailModal" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="closeModal()">×</span>
+
+    <h3>Detail Hasil Prediksi</h3>
+
+    <p><strong>Tanggal Uji:</strong> {{ data.tanggal }}</p>
+
+    <p><strong>Jenis:</strong> {{ data.jenis_beras }}</p>
+
+    <p><strong>Stok:</strong> {{ data.stok_target }}</p>
+
+    <p><strong>Kuantitas:</strong> {{ data.kuantitas_target }}</p>
+
+    <p>
+      <strong>Harga Prediksi:</strong> Rp {{ data.harga_prediksi|floatformat:0 }}
+    </p>
+
+    <p><strong>RMSE:</strong> {{ data.nilai_rmse|floatformat:2 }}</p>
+
+    <p><strong>K:</strong> {{ data.k_digunakan }}</p>
+
+    <p><strong>Tanggal Proses:</strong> {{ data.created_at }}</p>
+  </div>
+</div>
+
+<script>
+  function openModal(tanggal, jenis, stok, kuantitas, harga, rmse, k, created) {
+    document.getElementById("m_tanggal").innerHTML = tanggal;
+    document.getElementById("m_jenis").innerHTML = jenis;
+    document.getElementById("m_stok").innerHTML = stok;
+    document.getElementById("m_kuantitas").innerHTML = kuantitas;
+    document.getElementById("m_harga").innerHTML = harga;
+    document.getElementById("m_rmse").innerHTML = rmse;
+    document.getElementById("m_k").innerHTML = k;
+    document.getElementById("m_created").innerHTML = created;
+
+    document.getElementById("detailModal").style.display = "block";
+  }
+
+  function closeModal() {
+    document.getElementById("detailModal").style.display = "none";
+  }
+
+  window.onclick = function (event) {
+    if (event.target == document.getElementById("detailModal")) {
+      closeModal();
+    }
+  };
+</script>
+
+{% endblock %}

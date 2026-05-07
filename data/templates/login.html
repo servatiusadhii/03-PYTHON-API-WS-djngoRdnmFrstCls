@@ -1,0 +1,57 @@
+{% load static %}
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Login | Sistem Prediksi Beras</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="{% static 'css/login.css' %}" />
+  </head>
+
+  <body>
+    <div class="login-wrapper">
+      <div class="login-left">
+        <div class="logo">CV. SRIKANDI PUTRA PANGAN</div>
+        <div class="subtitle">Prediksi Harga Beras</div>
+
+        <div class="title">SISTEM PREDIKSI BERAS</div>
+        <div class="desc">
+          Sistem pendukung keputusan berbasis data untuk analisis dan prediksi
+          harga beras secara akurat.
+        </div>
+      </div>
+
+      <div class="login-right">
+        <h2>Login</h2>
+
+        {% if messages %}
+          {% for message in messages %}
+            <div class="error">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+
+        <form method="POST" action="{% url 'login' %}">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label>Username</label>
+            <input type="text" name="username" required />
+          </div>
+
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" name="password" required />
+          </div>
+
+          <button type="submit" class="login-btn">Masuk</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

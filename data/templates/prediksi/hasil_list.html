@@ -1,0 +1,437 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'css/hasil/hasil_list.css' %}" />
+{% endblock %} {% block content %}
+
+<style>
+  
+  .section-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .knn-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .card {
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  }
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+  }
+
+  .info-box {
+    background: #f5f7fb;
+    padding: 15px;
+    border-radius: 8px;
+  }
+
+  .info-box span {
+    display: block;
+    font-size: 13px;
+    color: #666;
+  }
+
+  .info-box strong {
+    font-size: 20px;
+  }
+
+  .calc-card {
+    margin-top: 20px;
+  }
+
+  .calc-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+
+  .calc-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .calc-table th,
+  .calc-table td {
+    padding: 10px;
+    border: 1px solid #eee;
+    text-align: center;
+  }
+
+  .calc-table th {
+    background: #f1f5ff;
+  }
+
+  .highlight {
+    background: #eef4ff;
+    font-weight: 600;
+  }
+
+  .table-simple {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table-simple th,
+  .table-simple td {
+    padding: 10px;
+    border: 1px solid #eee;
+    text-align: center;
+  }
+
+  .table-simple th {
+    background: #f1f5ff;
+  }
+
+  .formula-box {
+    text-align: center;
+    padding: 20px;
+    background: #f9fbff;
+    border-radius: 10px;
+  }
+
+  .result {
+    color: #2563eb;
+    margin-top: 10px;
+  }
+
+  .rmse-box {
+    background: #f7f7f7;
+    padding: 12px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+  }
+
+  .rmse-result {
+    text-align: center;
+    margin-top: 15px;
+    font-weight: 600;
+  }
+
+.modal{
+display:none;
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.5);
+justify-content:center;
+align-items:center;
+z-index:999;
+}
+
+.modal-content{
+background:white;
+padding:30px;
+border-radius:10px;
+width:700px;
+position:relative;
+}
+
+.modal-content.large{
+width:900px;
+}
+
+.close{
+position:absolute;
+right:15px;
+top:10px;
+font-size:25px;
+cursor:pointer;
+}
+
+.table-prediksi{
+width:100%;
+border-collapse:collapse;
+margin-top:15px;
+}
+
+.table-prediksi th{
+background:#2563eb;
+color:white;
+padding:12px;
+}
+
+.table-prediksi td{
+padding:12px;
+border-bottom:1px solid #eee;
+text-align:center;
+}
+
+.harga{
+font-weight:600;
+color:#2563eb;
+}
+</style>
+<div id="hasilModal" class="modal">
+
+  <div class="modal-content large">
+
+    <span class="close" onclick="closeModal()">×</span>
+
+    <h2>Hasil Prediksi</h2>
+
+    <div class="table-container">
+      <table class="table-prediksi">
+
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Tanggal Uji</th>
+            <th>Jenis Beras</th>
+            <th>Harga Prediksi</th>
+            <th>RMSE</th>
+            <th>K</th>
+          </tr>
+        </thead>
+
+        <tbody>
+
+          {% if data %}
+
+          <tr>
+            <td>1</td>
+
+            <td>{{ data.tanggal }}</td>
+
+            <td>{{ data.jenis_beras }}</td>
+
+            <td class="harga">
+              Rp {{ data.harga_prediksi|floatformat:0 }}
+            </td>
+
+            <td>{{ data.nilai_rmse|floatformat:2 }}</td>
+
+            <td>{{ data.k_digunakan }}</td>
+          </tr>
+
+          {% else %}
+
+          <tr>
+            <td colspan="6">Belum ada hasil prediksi</td>
+          </tr>
+
+          {% endif %}
+
+        </tbody>
+
+      </table>
+    </div>
+
+  </div>
+
+</div>
+
+
+
+  <h3 class="section-title">Perhitungan Manual KNN</h3>
+
+  <div class="knn-wrapper">
+    <!-- DATA TARGET -->
+    <div class="card">
+      <h4>1. Data Target</h4>
+
+      <div class="grid-2">
+        <div class="info-box">
+          <span>Stok Target</span>
+          <strong>{{ detail.target.stok }}</strong>
+        </div>
+
+        <div class="info-box">
+          <span>Kuantitas Target</span>
+          <strong>{{ detail.target.kuantitas }}</strong>
+        </div>
+      </div>
+    </div>
+
+    <!-- PERHITUNGAN JARAK -->
+    <div class="card">
+      <h4>2. Menghitung Euclidean Distance</h4>
+
+      {% for d in detail.perhitungan %}
+
+      <div class="calc-card">
+        <div class="calc-header">
+          <strong>Data Latih</strong>
+          <span>Harga: Rp {{ d.harga }}</span>
+        </div>
+
+        <table class="calc-table">
+          <thead>
+            <tr>
+              <th>Langkah</th>
+              <th>Perhitungan</th>
+              <th>Hasil</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr>
+              <td>Selisih Stok</td>
+              <td>{{ d.stok }} - {{ detail.target.stok }}</td>
+              <td>{{ d.selisih_stok }}</td>
+            </tr>
+
+            <tr>
+              <td>Selisih Kuantitas</td>
+              <td>{{ d.kuantitas }} - {{ detail.target.kuantitas }}</td>
+              <td>{{ d.selisih_kuantitas }}</td>
+            </tr>
+
+            <tr>
+              <td>Kuadrat Stok</td>
+              <td>({{ d.selisih_stok }})²</td>
+              <td>{{ d.kuadrat_stok }}</td>
+            </tr>
+
+            <tr>
+              <td>Kuadrat Kuantitas</td>
+              <td>({{ d.selisih_kuantitas }})²</td>
+              <td>{{ d.kuadrat_kuantitas }}</td>
+            </tr>
+
+            <tr>
+              <td>Jumlah Kuadrat</td>
+              <td>{{ d.kuadrat_stok }} + {{ d.kuadrat_kuantitas }}</td>
+              <td>{{ d.jumlah_kuadrat }}</td>
+            </tr>
+
+            <tr class="highlight">
+              <td>Euclidean Distance</td>
+              <td>√{{ d.jumlah_kuadrat }}</td>
+              <td>{{ d.jarak|floatformat:2 }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {% endfor %}
+    </div>
+
+    <!-- TETANGGA TERDEKAT -->
+    <div class="card">
+      <h4>3. K Tetangga Terdekat</h4>
+
+      <p>K = <strong>{{ data.k_digunakan }}</strong></p>
+
+      <table class="table-simple">
+        <thead>
+          <tr>
+            <th>Harga</th>
+            <th>Jarak</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {% for t in detail.tetangga %}
+          <tr>
+            <td>Rp {{ t.harga }}</td>
+            <td>{{ t.jarak|floatformat:2 }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- PREDIKSI -->
+    <div class="card">
+      <h4>4. Menghitung Harga Prediksi</h4>
+
+      <div class="formula-box">
+        <p>Total Harga Tetangga = <strong>{{ detail.total_harga }}</strong></p>
+
+        <p>Harga Prediksi = Total Harga / K</p>
+
+        <p>{{ detail.total_harga }} / {{ data.k_digunakan }}</p>
+
+        <h2 class="result">Rp {{ data.harga_prediksi|floatformat:0 }}</h2>
+      </div>
+    </div>
+
+    <!-- RMSE -->
+    <div class="card">
+      <h4>5. Evaluasi RMSE</h4>
+
+      {% for r in detail.rmse_detail %}
+
+      <div class="rmse-box">
+        <p>Harga Aktual : {{ r.harga_asli }}</p>
+
+        <p>
+          Error = {{ r.harga_asli }} - {{ data.harga_prediksi|floatformat:0 }}
+        </p>
+
+        <p>Error = {{ r.error|floatformat:2 }}</p>
+
+        <p>(Error)² = {{ r.kuadrat_error|floatformat:2 }}</p>
+      </div>
+
+      {% endfor %}
+
+      <div class="rmse-result">
+        <p>MSE = {{ detail.mse|floatformat:2 }}</p>
+        <p>RMSE = √{{ detail.mse|floatformat:2 }}</p>
+
+        <h2>{{ data.nilai_rmse|floatformat:2 }}</h2>
+      </div>
+    </div>
+  </div>
+<script>
+
+function openModal(tanggal, jenis, stok, kuantitas, harga, rmse, k, proses){
+
+document.getElementById("m_tanggal").innerText = tanggal
+document.getElementById("m_jenis").innerText = jenis
+document.getElementById("m_stok").innerText = stok
+document.getElementById("m_kuantitas").innerText = kuantitas
+document.getElementById("m_harga").innerText = "Rp " + harga
+document.getElementById("m_rmse").innerText = rmse
+document.getElementById("m_k").innerText = k
+document.getElementById("m_proses").innerText = proses
+
+document.getElementById("detailModal").style.display = "flex"
+
+}
+
+function closeModal(){
+document.getElementById("detailModal").style.display = "none"
+}
+
+window.onclick = function(event){
+
+let modal = document.getElementById("detailModal")
+
+if(event.target == modal){
+modal.style.display = "none"
+}
+
+}
+
+</script>
+
+<script>
+
+window.onload = function(){
+
+document.getElementById("hasilModal").style.display = "flex"
+
+}
+
+function closeModal(){
+document.getElementById("hasilModal").style.display = "none"
+}
+
+</script>
+  {% endblock %}
+</div>

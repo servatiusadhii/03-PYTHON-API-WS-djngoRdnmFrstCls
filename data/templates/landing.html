@@ -1,0 +1,35 @@
+{% load static %}
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Sistem Prediksi Beras</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="stylesheet" href="{% static 'css/landing.css' %}" />
+  </head>
+
+  <body>
+    <div class="brand">CV. SRIKANDI PUTRA PANGAN</div>
+
+    <a href="{% url 'login' %}" class="login-btn">Login</a>
+
+    <div class="card">
+      <h1>Sistem <span>Prediksi Beras</span></h1>
+      <p>
+        Sistem berbasis data untuk memprediksi harga dan ketersediaan beras
+        menggunakan metode analisis dan machine learning, guna mendukung
+        pengambilan keputusan yang lebih akurat dan efisien.
+      </p>
+
+      <div class="footer-note">
+        © 2026 Sistem Prediksi Beras — CV. Srikandi Putra Pangan
+      </div>
+    </div>
+  </body>
+</html>

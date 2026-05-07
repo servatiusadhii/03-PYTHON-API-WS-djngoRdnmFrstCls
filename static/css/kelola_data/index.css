@@ -1,0 +1,213 @@
+/* =========================
+   KELOLA DATA - INDEX
+   ========================= */
+
+.page-wrapper {
+  padding: 35px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.btn-add {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  padding: 10px 18px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  transition: 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-add:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+}
+
+.table-card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.05);
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead {
+  background: #f8fafc;
+}
+
+th,
+td {
+  padding: 12px 10px;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+  font-size: 14px;
+  vertical-align: middle;
+}
+
+th {
+  font-weight: 600;
+  color: #475569;
+}
+
+tbody tr:hover {
+  background: #f9fafb;
+}
+
+.col-action {
+  width: 180px;
+}
+
+.price {
+  font-weight: 600;
+  color: #059669;
+}
+
+.stock {
+  font-weight: 600;
+  color: #2563eb;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 30px;
+  color: #64748b;
+  font-weight: 500;
+}
+
+/* =========================
+   ACTION BUTTONS
+   ========================= */
+
+.action-buttons {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: nowrap;
+}
+
+.delete-form {
+  margin: 0;
+  display: inline-block;
+}
+
+/* reset total untuk link dan button */
+.btn-action,
+.btn-action:link,
+.btn-action:visited,
+.btn-action:hover,
+.btn-action:active,
+.btn-action:focus {
+  min-width: 72px;
+  height: 40px;
+  padding: 0 16px;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  text-decoration: none;
+  box-shadow: none;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: inherit;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+/* hilangkan style default button browser */
+button.btn-action {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: none;
+}
+
+/* EDIT */
+.btn-edit,
+.btn-edit:link,
+.btn-edit:visited {
+  background: #fef3c7;
+  color: #a16207;
+}
+
+.btn-edit:hover,
+.btn-edit:focus {
+  background: #fde68a;
+  color: #92400e;
+  text-decoration: none;
+}
+
+/* DELETE */
+.btn-delete,
+.btn-delete:hover,
+.btn-delete:focus {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.btn-delete:hover,
+.btn-delete:focus {
+  background: #fecaca;
+  color: #b91c1c;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+  .page-wrapper {
+    padding: 20px;
+  }
+
+  .page-title {
+    font-size: 24px;
+  }
+
+  .btn-add {
+    width: 100%;
+  }
+
+  th,
+  td {
+    font-size: 13px;
+    padding: 10px 8px;
+  }
+
+  .action-buttons {
+    gap: 8px;
+  }
+
+  .btn-action,
+  .btn-action:link,
+  .btn-action:visited,
+  .btn-action:hover,
+  .btn-action:active,
+  .btn-action:focus {
+    min-width: 66px;
+    height: 36px;
+    font-size: 13px;
+    padding: 0 12px;
+  }
+}

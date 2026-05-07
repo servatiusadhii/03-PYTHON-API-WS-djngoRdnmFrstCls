@@ -1,0 +1,571 @@
+{% extends 'layouts/base.html' %} {% load static %} {% block title %}Kelola
+Data{% endblock %} {% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/kelola_data/index.css' %}" />
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+/>
+{% endblock %} {% block content %}
+<style>
+  /* ================================
+PAGE
+================================ */
+
+  .page-wrapper {
+    padding: 30px 35px;
+  }
+
+  .page-title {
+    font-size: 30px;
+    font-weight: 700;
+    color: #1f2937;
+    margin-bottom: 20px;
+  }
+
+  /* ================================
+CARD CONTAINER
+================================ */
+
+  .card {
+    background: #ffffff;
+    border-radius: 14px;
+    padding: 25px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  }
+
+  /* ================================
+TOP TABLE AREA
+================================ */
+
+  .table-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+
+  /* ================================
+SEARCH
+================================ */
+
+  .search-box input {
+    width: 220px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    border: 1px solid #d1d5db;
+    font-size: 14px;
+    outline: none;
+    transition: 0.2s;
+  }
+
+  .search-box input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.1);
+  }
+
+  /* ================================
+ACTION BUTTONS
+================================ */
+
+  .action-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+
+  .btn-add {
+    background: #6366f1;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+  }
+
+  .btn-add:hover {
+    background: #4f46e5;
+  }
+
+  .btn-action {
+    background: #f3f4f6;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: 0.2s;
+  }
+
+  .btn-action:hover {
+    background: #e5e7eb;
+  }
+
+  /* ================================
+TABLE
+================================ */
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead {
+    background: #f3f4f6;
+  }
+
+  thead th {
+    padding: 14px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  tbody td {
+    padding: 16px 14px;
+    border-bottom: 1px solid #f1f5f9;
+    font-size: 14px;
+    color: #374151;
+  }
+
+  tbody tr:hover {
+    background: #f9fafb;
+    transition: 0.2s;
+  }
+
+  /* ================================
+DATA COLORS
+================================ */
+
+  .qty {
+    color: #9333ea;
+    font-weight: 600;
+  }
+
+  .price {
+    color: #059669;
+    font-weight: 700;
+  }
+
+  .stock {
+    color: #2563eb;
+    font-weight: 700;
+  }
+
+  /* ================================
+ACTION BUTTONS ICON
+================================ */
+
+  .aksi {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .icon-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.2s;
+    text-decoration: none;
+  }
+
+  /* EDIT */
+
+  .icon-btn.edit {
+    background: #fef3c7;
+    color: #a16207;
+  }
+
+  .icon-btn.edit:hover {
+    background: #fde68a;
+  }
+
+  /* DELETE */
+
+  .icon-btn.delete {
+    background: #fee2e2;
+    color: #dc2626;
+  }
+
+  .icon-btn.delete:hover {
+    background: #fecaca;
+  }
+
+  /* ================================
+EMPTY STATE
+================================ */
+
+  .empty-row {
+    text-align: center;
+    padding: 30px;
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  /* ================================
+PAGINATION
+================================ */
+
+  .pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+    font-size: 14px;
+  }
+
+  .pagination-controls {
+    display: flex;
+    gap: 8px;
+  }
+
+ .pagination-controls {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  min-width: 38px;
+  height: 38px;
+  padding: 0 14px;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s ease;
+}
+
+.pagination-btn:hover {
+  background: #f3f4f6;
+}
+
+.pagination-btn.active {
+  background: #6366f1;
+  color: white;
+  border-color: #6366f1;
+}
+
+.pagination-btn.disabled {
+  background: #f9fafb;
+  color: #9ca3af;
+  border-color: #e5e7eb;
+  pointer-events: none;
+}
+
+  /* ================================
+RESPONSIVE
+================================ */
+
+  @media (max-width: 900px) {
+    .table-top {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .search-box input {
+      width: 100%;
+    }
+  }
+
+  /* ==============================
+IMPORT MODAL
+============================== */
+
+  .modal-import {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+
+    justify-content: center;
+    align-items: center;
+  }
+
+  .modal-content {
+    background: white;
+    width: 420px;
+    border-radius: 12px;
+    overflow: hidden;
+    animation: popup 0.25s ease;
+  }
+
+  @keyframes popup {
+    from {
+      transform: scale(0.9);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  .modal-header {
+    padding: 18px 20px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .modal-header h3 {
+    font-size: 18px;
+  }
+
+  .close-modal {
+    font-size: 22px;
+    cursor: pointer;
+  }
+
+  .modal-body {
+    padding: 20px;
+  }
+
+  .modal-body input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+  }
+
+  .note {
+    font-size: 13px;
+    color: #666;
+    margin-top: 10px;
+  }
+
+  .modal-footer {
+    padding: 15px 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  .btn-cancel {
+    background: #eee;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .btn-import {
+    background: #6366f1;
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .btn-import:hover {
+    background: #4f46e5;
+  }
+</style>
+<div class="page-wrapper">
+  <h2 class="page-title">Kelola Data</h2>
+
+  <div class="card">
+    <!-- TOP BAR -->
+    <div class="table-top">
+      <div class="search-box">
+        <input type="text" placeholder="🔍 Cari data..." />
+      </div>
+
+      <div class="action-buttons">
+        <a href="{% url 'kelola_data_create' %}" class="btn-add">
+          <i class="bi bi-plus-circle"></i> Tambah Data
+        </a>
+
+        <a href="{% url 'download_template_kelola_data' %}" class="btn-action">
+          <i class="bi bi-download"></i> Download Format
+        </a>
+
+        <button class="btn-action" onclick="openImportModal()">
+          <i class="bi bi-upload"></i> Import Excel
+        </button>
+
+        {% comment %} <button class="btn-action">
+          <i class="bi bi-arrow-clockwise"></i> Refresh
+        </button> {% endcomment %}
+
+        <button class="btn-action">
+          <a href="{% url 'export_kelola_data_pdf' %}" class="btn-action">
+            <i class="bi bi-file-earmark-pdf"></i> Export PDF
+          </a>
+        </button>
+      </div>
+    </div>
+
+    <!-- TABLE -->
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Tanggal</th>
+          <th>Jenis Beras</th>
+          <th>Supplier</th>
+          <th>Kuantitas</th>
+          <th>Harga/kg</th>
+          <th>Stok</th>
+          <th style="text-align: center">Aksi</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        {% for d in data %}
+        <tr>
+          <td>{{ data.start_index|add:forloop.counter0 }}</td>
+
+          <td>{{ d.tanggal }}</td>
+
+          <td>{{ d.jenis_beras }}</td>
+
+          <td>{{ d.supplier.nama_supplier }}</td>
+
+          <td class="qty">{{ d.kuantitas_kg }} kg</td>
+
+          <td class="price">Rp {{ d.harga_per_kg }}</td>
+
+          <td class="stock">{{ d.stok_kg }} kg</td>
+
+          <td class="aksi">
+            <a href="{% url 'kelola_data_edit' d.id %}" class="icon-btn edit">
+              <i class="bi bi-pencil-square"></i>
+            </a>
+
+            <form action="{% url 'kelola_data_delete' d.id %}" method="POST">
+              {% csrf_token %}
+              <button
+                type="submit"
+                class="icon-btn delete"
+                onclick="return confirm('Yakin hapus data?');"
+              >
+                <i class="bi bi-trash"></i>
+              </button>
+            </form>
+          </td>
+        </tr>
+
+        {% empty %}
+
+        <tr>
+          <td colspan="8" class="empty-row">Belum ada data</td>
+        </tr>
+
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <!-- PAGINATION -->
+   <div class="pagination">
+  <div>
+    Menampilkan {{ data.start_index }} - {{ data.end_index }} dari {{ data.paginator.count }} entri
+  </div>
+
+  <div class="pagination-controls">
+    {% if data.has_previous %}
+      <a href="?page={{ data.previous_page_number }}" class="pagination-btn">Sebelumnya</a>
+    {% else %}
+      <span class="pagination-btn disabled">Sebelumnya</span>
+    {% endif %}
+
+    {% for num in data.paginator.page_range %}
+      {% if data.number == num %}
+        <span class="pagination-btn active">{{ num }}</span>
+      {% else %}
+        <a href="?page={{ num }}" class="pagination-btn">{{ num }}</a>
+      {% endif %}
+    {% endfor %}
+
+    {% if data.has_next %}
+      <a href="?page={{ data.next_page_number }}" class="pagination-btn">Berikutnya</a>
+    {% else %}
+      <span class="pagination-btn disabled">Berikutnya</span>
+    {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- IMPORT MODAL -->
+<div id="importModal" class="modal-import">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>Import Data Excel</h3>
+      <span class="close-modal" onclick="closeImportModal()">&times;</span>
+    </div>
+
+    <form
+      action="{% url 'import_kelola_data_excel' %}"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      {% csrf_token %}
+
+      <div class="modal-body">
+        <input type="file" name="file" accept=".xlsx" required />
+
+        <p class="note">Upload file Excel sesuai template.</p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn-cancel" onclick="closeImportModal()">
+          Batal
+        </button>
+
+        <button type="submit" class="btn-import">
+          <i class="bi bi-upload"></i> Import
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function openImportModal() {
+    document.getElementById("importModal").style.display = "flex";
+  }
+
+  function closeImportModal() {
+    document.getElementById("importModal").style.display = "none";
+  }
+
+  window.onclick = function (event) {
+    const modal = document.getElementById("importModal");
+
+    if (event.target === modal) {
+      modal.style.display = "none";
+    }
+  };
+</script>
+{% endblock %}

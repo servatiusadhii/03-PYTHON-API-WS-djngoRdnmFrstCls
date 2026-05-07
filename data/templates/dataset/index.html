@@ -1,0 +1,70 @@
+<!-- {% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %}Kelola Data{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/dataset/dataset.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<div class="page-wrapper">
+  <div class="page-title">Dataset</div>
+
+  <div class="card">
+    <div class="table-top">
+      <div class="search-box">
+        <input type="text" placeholder="🔍 Cari dataset..." />
+      </div>
+
+      <div class="action-buttons">
+        <button class="btn-action">⬆ Import</button>
+        <button class="btn-action">🔄 Refresh</button>
+        <button class="btn-action">⬇ Export</button>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Tanggal</th>
+          <th>Kuantitas (kg)</th>
+          <th>Total Nilai (Rp)</th>
+          <th>Stok (kg)</th>
+          <th>Harga / kg</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in data %}
+        <tr>
+          <td>{{ forloop.counter }}</td>
+          <td>{{ d.tanggal }}</td>
+          <td>{{ d.kuantitas_kg }}</td>
+          <td>Rp {{ d.total_nilai }}</td>
+          <td>{{ d.stok_kg }}</td>
+          <td>Rp {{ d.harga_per_kg }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6" class="empty-row">
+            Belum ada dataset
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="pagination">
+      <div>Menampilkan {{ data|length }} entri</div>
+
+      <div class="pagination-controls">
+        <button>Sebelumnya</button>
+        <button class="active">1</button>
+        <button>Berikutnya</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %} -->

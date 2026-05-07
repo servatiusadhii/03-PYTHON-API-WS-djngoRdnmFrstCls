@@ -1,0 +1,151 @@
+/* =========================
+   SUPPLIER - CREATE
+   ========================= */
+
+.full-page {
+  max-width: 1100px;
+  margin: 40px auto;
+  padding: 0 30px 40px;
+}
+
+.form-header {
+  margin-bottom: 30px;
+}
+
+.form-header h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 8px;
+}
+
+.form-header p {
+  font-size: 15px;
+  color: #64748b;
+  margin: 0;
+}
+
+form {
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 30px;
+  box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+}
+
+.form-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px 28px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group.full {
+  grid-column: 1 / -1;
+}
+
+.form-group label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-bottom: 10px;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid #dbe2ea;
+  border-radius: 14px;
+  background: #f8fafc;
+  font-size: 14px;
+  color: #0f172a;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #60a5fa;
+  background: #ffffff;
+  box-shadow: 0 0 0 4px rgba(96, 165, 250, 0.15);
+}
+
+.form-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 30px;
+  flex-wrap: wrap;
+}
+
+.btn-save,
+.btn-cancel {
+  min-width: 120px;
+  height: 44px;
+  padding: 0 18px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.btn-save {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  color: #ffffff;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
+}
+
+.btn-save:hover {
+  transform: translateY(-1px);
+}
+
+.btn-cancel {
+  background: #e2e8f0;
+  color: #334155;
+}
+
+.btn-cancel:hover {
+  background: #cbd5e1;
+}
+
+@media (max-width: 768px) {
+  .full-page {
+    margin: 24px auto;
+    padding: 0 18px 30px;
+  }
+
+  form {
+    padding: 20px;
+    border-radius: 14px;
+  }
+
+  .form-layout {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .form-header h2 {
+    font-size: 24px;
+  }
+
+  .btn-save,
+  .btn-cancel {
+    width: 100%;
+  }
+}

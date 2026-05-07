@@ -1,0 +1,306 @@
+{% extends 'layouts/base.html' %}
+{% block title %}Dashboard | Prediksi Harga Beras{% endblock %}
+{% block content %}
+
+<style>
+  h1 {
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: #1e293b;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
+  }
+
+  .card {
+    background: #fff;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+    transition: 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-5px);
+  }
+
+  .card-title {
+    font-size: 14px;
+    color: #64748b;
+    margin-bottom: 8px;
+  }
+
+  .card-value {
+    font-size: 28px;
+    font-weight: 600;
+    color: #2563eb;
+  }
+
+  .chart-box {
+    background: #fff;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+    margin-bottom: 30px;
+  }
+
+  .chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
+    gap: 10px;
+  }
+
+  .chart-title {
+    font-weight: 600;
+    font-size: 18px;
+    color: #1e293b;
+  }
+
+  .chart-subtitle {
+    font-size: 14px;
+    color: #64748b;
+    margin-top: 4px;
+  }
+
+  .chart-wrapper {
+    height: 350px;
+  }
+
+  .filter-group {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .filter {
+    padding: 7px 12px;
+    border-radius: 8px;
+    border: 1px solid #e2e8f0;
+    background: #f8fafc;
+  }
+
+  .filter-btn {
+    background: #2563eb;
+    border: none;
+    padding: 7px 15px;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+
+  .filter-btn:hover {
+    background: #1d4ed8;
+  }
+
+  .table-box {
+    background: #fff;
+    padding: 25px;
+    border-radius: 14px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  }
+
+  .table-title {
+    font-weight: 600;
+    margin-bottom: 15px;
+    color: #1e293b;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  thead {
+    background: #f1f5f9;
+  }
+
+  th,
+  td {
+    padding: 12px;
+    text-align: left;
+    font-size: 14px;
+  }
+
+  tr {
+    border-bottom: 1px solid #e2e8f0;
+  }
+
+  .pagination {
+    margin-top: 20px;
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .pagination a,
+  .pagination span {
+    padding: 6px 12px;
+    border-radius: 6px;
+    background: #f1f5f9;
+    text-decoration: none;
+    color: #334155;
+  }
+
+  .pagination .active {
+    background: #2563eb;
+    color: white;
+  }
+
+  .empty-data {
+    text-align: center;
+    padding: 20px;
+    color: #64748b;
+  }
+</style>
+
+<h1>Dashboard Prediksi Harga Beras</h1>
+
+<div class="cards">
+  <div class="card">
+    <div class="card-title">Total Data</div>
+    <div class="card-value">{{ total_data }}</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Total Supplier</div>
+    <div class="card-value">{{ total_supplier }}</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Harga Tertinggi</div>
+    <div class="card-value">Rp {{ harga_tertinggi|default:0 }}</div>
+  </div>
+
+  <div class="card">
+    <div class="card-title">Prediksi Besok</div>
+    <div class="card-value">Rp {{ prediksi_harga|default:0 }}</div>
+  </div>
+</div>
+
+<div class="chart-box">
+  <div class="chart-header">
+    <div>
+      <div class="chart-title">Tren Harga Beras + Prediksi</div>
+      <div class="chart-subtitle">Jenis Beras: {{ jenis_beras_tetap }}</div>
+    </div>
+
+    <form method="GET" class="filter-group">
+      <select name="range" class="filter">
+        <option value="" {% if not request.GET.range %}selected{% endif %}>Semua</option>
+        <option value="7" {% if request.GET.range == "7" %}selected{% endif %}>1 Minggu</option>
+        <option value="30" {% if request.GET.range == "30" %}selected{% endif %}>1 Bulan</option>
+        <option value="90" {% if request.GET.range == "90" %}selected{% endif %}>3 Bulan</option>
+        <option value="365" {% if request.GET.range == "365" %}selected{% endif %}>1 Tahun</option>
+      </select>
+
+      <button type="submit" class="filter-btn">Filter</button>
+    </form>
+  </div>
+
+  <div class="chart-wrapper">
+    <canvas id="chartHarga"></canvas>
+  </div>
+</div>
+
+<div class="table-box">
+  <div class="table-title">Data Harga Beras</div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Tanggal</th>
+        <th>Jenis Beras</th>
+        <th>Supplier</th>
+        <th>Harga / Kg</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for d in data_list %}
+      <tr>
+        <td>{{ d.tanggal }}</td>
+        <td>{{ d.jenis_beras }}</td>
+        <td>{{ d.supplier.nama_supplier }}</td>
+        <td>Rp {{ d.harga_per_kg }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" class="empty-data">Belum ada data harga beras.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="pagination">
+    {% if data_list.has_previous %}
+      <a href="?page={{ data_list.previous_page_number }}{% if request.GET.range %}&range={{ request.GET.range }}{% endif %}">Prev</a>
+    {% endif %}
+
+    <span class="active">{{ data_list.number }}</span>
+
+    {% if data_list.has_next %}
+      <a href="?page={{ data_list.next_page_number }}{% if request.GET.range %}&range={{ request.GET.range }}{% endif %}">Next</a>
+    {% endif %}
+  </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const labels = JSON.parse('{{ tanggal|escapejs }}');
+  const harga = JSON.parse('{{ harga|escapejs }}');
+  const prediksi = JSON.parse('{{ prediksi|escapejs }}');
+
+  const labelsPrediksi = [...labels];
+  if (prediksi.length > labels.length) {
+    labelsPrediksi.push('Prediksi');
+  }
+
+  const dataHarga = [...harga];
+  if (prediksi.length > harga.length) {
+    dataHarga.push(null);
+  }
+
+  const ctx = document.getElementById('chartHarga');
+
+  new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: labelsPrediksi,
+      datasets: [
+        {
+          label: 'Harga Beras',
+          data: dataHarga,
+          borderColor: '#2563eb',
+          backgroundColor: 'rgba(37,99,235,0.1)',
+          borderWidth: 3,
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'Prediksi KNN',
+          data: prediksi,
+          borderColor: '#f59e0b',
+          borderDash: [6, 6],
+          borderWidth: 3,
+          tension: 0.4,
+          fill: false
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  });
+</script>
+{% endblock %}
