@@ -97,13 +97,21 @@ TEMPLATES = [
 #         },
 #     }
 # }
+# Ambil dari environment variable Railway
+DATABASE_URL = os.environ.get('MYSQL_URL')
+
 DATABASES = {
     'default': dj_database_url.config(
-        # Mengambil dari variabel MYSQL_URL di Railway
-        default=os.environ.get('MYSQL_URL') or 'sqlite:///db.sqlite3',
-        conn_max_age=600
+        default=DATABASE_URL,
+        conn_max_age=600,
     )
 }
+
+# Tambahkan baris ini supaya koneksi lebih stabil
+if DATABASES['default'].get('ENGINE') == 'django.db.backends.mysql':
+    DATABASES['default']['OPTIONS'] = {
+        'charset': 'utf8mb4',
+    }
 
 
 # =============================
