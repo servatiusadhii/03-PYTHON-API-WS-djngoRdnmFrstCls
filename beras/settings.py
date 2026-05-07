@@ -4,8 +4,11 @@ Compatible with XAMPP (MariaDB 10.4)
 """
 
 from pathlib import Path
+from django.db import connections
+from django.db.utils import OperationalError
 import dj_database_url
 import os
+
 
 # =============================
 # BASE DIR
@@ -80,38 +83,61 @@ TEMPLATES = [
     },
 ]
 
-
 # =============================
-# DATABASE (XAMPP / MariaDB 10.4)
+# DATABASE CONFIGURATION
 # =============================
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'db_beras',
-#         'USER': 'root',
-#         'PASSWORD': '',
-#         'HOST': 'localhost',
-#         'PORT': '3306',
-#         'OPTIONS': {
-#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-#         },
-#     }
-# }
-# Ambil dari environment variable Railway
+# Deteksi otomatis: Pakai MySQL Railway jika ada, kalau tidak pakai MariaDB XAMPP lokal
 DATABASE_URL = os.environ.get('MYSQL_URL')
 
-DATABASES = {
-    'default': dj_database_url.config(
-        default=DATABASE_URL,
-        conn_max_age=0,
-    )
-}
-
-# Tambahkan baris ini supaya koneksi lebih stabil
-if DATABASES['default'].get('ENGINE') == 'django.db.backends.mysql':
-    DATABASES['default']['OPTIONS'] = {
-        'charset': 'utf8mb4',
+if DATABASE_URL:
+    # Koneksi untuk RAILWAY (Production)
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
     }
+else:
+    # Koneksi untuk XAMPP (Lokal)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': 'db_beras',
+            'USER': 'root',
+            'PASSWORD': '',
+            'HOST': '127.0.0.1',
+            'PORT': '3306',
+        }
+    }
+
+# Opsi tambahan untuk MySQL agar stabil
+if DATABASES['default'].get('ENGINE') == 'django.db.backends.mysql':
+    DATABASES['default'].setdefault('OPTIONS', {})
+    DATABASES['default']['OPTIONS'].update({
+        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+        'charset': 'utf8mb4',
+    })
+
+# =============================
+# STATIC FILES (WhiteNoise)
+# =============================
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# WhiteNoise: Kompres file statis agar loading web lebih cepat
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# =============================
+# INTERNATIONALIZATION
+# =============================
+LANGUAGE_CODE = 'id'
+TIME_ZONE = 'Asia/Jakarta'
+USE_I18N = True
+USE_TZ = True
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 # =============================
