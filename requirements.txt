@@ -6,3 +6,4 @@ scikit-learn
 pymysql
 openpyxl
 reportlab
+dj-database-url

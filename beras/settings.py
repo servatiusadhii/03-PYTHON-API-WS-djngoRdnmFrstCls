@@ -4,6 +4,7 @@ Compatible with XAMPP (MariaDB 10.4)
 """
 
 from pathlib import Path
+import dj_database_url
 
 # =============================
 # BASE DIR
@@ -82,18 +83,25 @@ TEMPLATES = [
 # =============================
 # DATABASE (XAMPP / MariaDB 10.4)
 # =============================
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'db_beras',
+#         'USER': 'root',
+#         'PASSWORD': '',
+#         'HOST': 'localhost',
+#         'PORT': '3306',
+#         'OPTIONS': {
+#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
+#         },
+#     }
+# }
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'db_beras',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'OPTIONS': {
-            'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        },
-    }
+    'default': dj_database_url.config(
+        # Mengambil dari variabel MYSQL_URL di Railway
+        default=os.environ.get('MYSQL_URL') or 'sqlite:///db.sqlite3',
+        conn_max_age=600
+    )
 }
 
 
