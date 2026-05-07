@@ -51,7 +51,8 @@ def logout_view(request):
 
 @login_required(login_url='login')
 def dashboard(request):
-    data = KelolaData.objects.filter(jenis_beras=JENIS_BERAS_TETAP).order_by('tanggal')
+    # Di dashboard(request), ganti baris data jadi:
+    data = KelolaData.objects.filter(jenis_beras=JENIS_BERAS_TETAP).order_by('-tanggal')[:100] # Ambil 100 data terakhir saja
 
     range_hari = request.GET.get('range')
 
