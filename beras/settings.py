@@ -8,8 +8,6 @@ from django.db import connections
 from django.db.utils import OperationalError
 import dj_database_url
 import os
-import pymysql
-pymysql.install_as_MySQLdb()
 
 
 # =============================
@@ -92,20 +90,10 @@ TEMPLATES = [
 DATABASE_URL = os.environ.get('MYSQL_URL')
 
 if DATABASE_URL:
+    # Ini bakal jalan kalau kamu sudah 'set' variabel di CMD tadi
     DATABASES = {
-        'default': dj_database_url.config(
-            default=DATABASE_URL,
-            conn_max_age=0,  # Ubah ke 0 untuk menghindari koneksi basi
-            conn_health_checks=True,
-        )
+        'default': dj_database_url.config(default=DATABASE_URL)
     }
-    # Tambahkan OPTIONS ini untuk mencegah 'Lost connection'
-    DATABASES['default']['OPTIONS'] = {
-        'connect_timeout': 60,
-        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'",
-        'charset': 'utf8mb4',
-    }
-    # Paksa Engine ke MySQL
     DATABASES['default']['ENGINE'] = 'django.db.backends.mysql'
 
 # =============================
