@@ -237,6 +237,7 @@ def kelola_data_delete(request, id):
 
 @login_required(login_url='login')
 def download_template_kelola_data(request):
+    import openpyxl
     wb = openpyxl.Workbook()
     ws = wb.active
     ws.title = "Template Import"
