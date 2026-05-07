@@ -1,0 +1,1 @@
+web: gunicorn PrediksiBeras.wsgi --bind 0.0.0.0:$PORT
