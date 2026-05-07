@@ -10,11 +10,6 @@ from math import sqrt
 from datetime import timedelta
 import json
 import math
-import openpyxl
-from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib.pagesizes import A4
-from reportlab.lib import colors
 from .models import Supplier, KelolaData, HasilPrediksi, JENIS_BERAS_TETAP
 
 def generate_no_pemasok():
@@ -275,6 +270,11 @@ def download_template_kelola_data(request):
 
 @login_required(login_url='login')
 def import_kelola_data_excel(request):
+    import openpyxl
+    from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+    from reportlab.lib.styles import getSampleStyleSheet
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib import colors
     if request.method == "POST":
         excel_file = request.FILES.get("file")
 
@@ -319,6 +319,11 @@ def import_kelola_data_excel(request):
 
 @login_required(login_url='login')
 def export_kelola_data_pdf(request):
+    import openpyxl
+    from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, Spacer
+    from reportlab.lib.styles import getSampleStyleSheet
+    from reportlab.lib.pagesizes import A4
+    from reportlab.lib import colors
     response = HttpResponse(content_type='application/pdf')
     response['Content-Disposition'] = 'attachment; filename="laporan_data_beras.pdf"'
 
