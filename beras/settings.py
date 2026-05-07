@@ -95,6 +95,9 @@ if DATABASE_URL:
         'default': dj_database_url.config(default=DATABASE_URL)
     }
     DATABASES['default']['ENGINE'] = 'django.db.backends.mysql'
+    DATABASES['default']['OPTIONS'] = {
+        'ssl': {'ca': '/etc/ssl/certs/ca-certificates.crt'}
+    }
 
 # =============================
 # STATIC FILES (WhiteNoise)
