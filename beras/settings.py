@@ -5,6 +5,7 @@ Compatible with XAMPP (MariaDB 10.4)
 
 from pathlib import Path
 import dj_database_url
+import os
 
 # =============================
 # BASE DIR
