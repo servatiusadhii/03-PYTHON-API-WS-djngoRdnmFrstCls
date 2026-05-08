@@ -20,7 +20,7 @@ body {
   border-radius: 28px;
   overflow: hidden;
   display: flex;
-  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.45);
+  box-shadow: 0 40px 90px rgba(40, 39, 39, 0.45);
 }
 
 .login-left {
