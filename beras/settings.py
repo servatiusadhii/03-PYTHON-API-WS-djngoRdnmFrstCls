@@ -23,9 +23,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-ganti-key-ini-jika-production'
 DEBUG = False
 ALLOWED_HOSTS = ['*']
-CSRF_TRUSTED_ORIGINS = [
-    "https://03-python-api-ws-djngordnmfrstcls-production.up.railway.app",
-]
 
 
 # =============================
