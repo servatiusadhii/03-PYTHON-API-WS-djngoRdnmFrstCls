@@ -45,9 +45,12 @@ def logout_view(request):
 
 
 @login_required(login_url='login')
+@login_required(login_url='login')
 def dashboard(request):
-    # Di dashboard(request), ganti baris data jadi:
-    data = KelolaData.objects.filter(jenis_beras=JENIS_BERAS_TETAP).order_by('-tanggal')[:100] # Ambil 100 data terakhir saja
+
+    data = KelolaData.objects.filter(
+        jenis_beras=JENIS_BERAS_TETAP
+    )
 
     range_hari = request.GET.get('range')
 
@@ -56,14 +59,22 @@ def dashboard(request):
         start_date = today - timedelta(days=int(range_hari))
         data = data.filter(tanggal__gte=start_date)
 
+    # urutkan SEKALI saja
+    data = data.order_by('-tanggal')
+
+    # ambil 100 data terakhir
+    limited_data = data[:100]
+
     total_data = data.count()
     total_supplier = Supplier.objects.count()
-    harga_tertinggi = data.aggregate(Max('harga_per_kg'))['harga_per_kg__max']
+    harga_tertinggi = data.aggregate(
+        Max('harga_per_kg')
+    )['harga_per_kg__max']
 
     tanggal = []
     harga = []
 
-    for d in data:
+    for d in limited_data:
         tanggal.append(d.tanggal.strftime("%Y-%m-%d"))
         harga.append(d.harga_per_kg)
 
@@ -80,7 +91,8 @@ def dashboard(request):
     else:
         prediksi_harga = 0
 
-    paginator = Paginator(data.order_by('-tanggal'), 5)
+    paginator = Paginator(limited_data, 5)
+
     page_number = request.GET.get('page')
     data_list = paginator.get_page(page_number)
 
@@ -97,7 +109,6 @@ def dashboard(request):
     }
 
     return render(request, 'dashboard/index.html', context)
-
 
 @login_required(login_url='login')
 def supplier(request):

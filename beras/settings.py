@@ -87,17 +87,16 @@ TEMPLATES = [
 # DATABASE CONFIGURATION
 # =============================
 # Deteksi otomatis: Pakai MySQL Railway jika ada, kalau tidak pakai MariaDB XAMPP lokal
-DATABASE_URL = os.environ.get('MYSQL_URL')
-
-if DATABASE_URL:
-    # Ini bakal jalan kalau kamu sudah 'set' variabel di CMD tadi
-    DATABASES = {
-        'default': dj_database_url.config(default=DATABASE_URL)
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'railway',
+        'USER': 'root',
+        'PASSWORD': 'QwBMCMaGaPgRtzTZNLALGiewsXMgRsCJ',
+        'HOST': 'turntable.proxy.rlwy.net',
+        'PORT': '50114',
     }
-    DATABASES['default']['ENGINE'] = 'django.db.backends.mysql'
-    DATABASES['default']['OPTIONS'] = {
-        'ssl': {'ca': '/etc/ssl/certs/ca-certificates.crt'}
-    }
+}
 
 # =============================
 # STATIC FILES (WhiteNoise)
