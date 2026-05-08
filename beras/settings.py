@@ -99,17 +99,6 @@ DATABASES = {
     )
 }
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'railway',
-#         'USER': 'root',
-#         'PASSWORD': 'QwBMCMaGaPgRtzTZNLALGiewsXMgRsCJ',
-#         'HOST': 'turntable.proxy.rlwy.net',
-#         'PORT': '50114',
-#     }
-# }
-
 # =============================
 # STATIC FILES (WhiteNoise)
 # =============================
