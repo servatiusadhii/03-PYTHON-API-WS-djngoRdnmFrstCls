@@ -9,3 +9,4 @@ reportlab
 dj-database-url
 whitenoise
 cryptography
+dotenv

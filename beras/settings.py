@@ -8,6 +8,7 @@ from django.db import connections
 from django.db.utils import OperationalError
 import dj_database_url
 import os
+from dotenv import load_dotenv
 
 
 # =============================
@@ -87,16 +88,27 @@ TEMPLATES = [
 # DATABASE CONFIGURATION
 # =============================
 # Deteksi otomatis: Pakai MySQL Railway jika ada, kalau tidak pakai MariaDB XAMPP lokal
+load_dotenv()
+
+DATABASE_URL = os.getenv("MYSQL_URL")
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'railway',
-        'USER': 'root',
-        'PASSWORD': 'QwBMCMaGaPgRtzTZNLALGiewsXMgRsCJ',
-        'HOST': 'turntable.proxy.rlwy.net',
-        'PORT': '50114',
-    }
+    'default': dj_database_url.parse(
+        DATABASE_URL,
+        conn_max_age=600
+    )
 }
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'railway',
+#         'USER': 'root',
+#         'PASSWORD': 'QwBMCMaGaPgRtzTZNLALGiewsXMgRsCJ',
+#         'HOST': 'turntable.proxy.rlwy.net',
+#         'PORT': '50114',
+#     }
+# }
 
 # =============================
 # STATIC FILES (WhiteNoise)
