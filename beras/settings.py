@@ -21,7 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY
 # =============================
 SECRET_KEY = 'django-insecure-ganti-key-ini-jika-production'
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 
